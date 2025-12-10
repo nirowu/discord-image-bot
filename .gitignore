@@ -1,1 +1,22 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+
+# Environment variables
 .env
+
+# Data folder (auto generated images + DB)
+data/*
+!data/.gitkeep
+
+# Logs
+*.log
+
+# macOS files
+.DS_Store
+
