@@ -1,0 +1,8 @@
+pytest
+rapidfuzz
+pytesseract
+discord.py
+Pillow
+pytest-asyncio
+python-dotenv
+
