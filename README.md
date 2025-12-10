@@ -7,6 +7,17 @@ Search works through normal text messages or through a slash command with autoco
 
 ##  Features
 
+### Setting
+```bash
+python3.10 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+cp .env.example .env # fix the corresponding content
+# run the server
+python ./main_bot.py
+```
+
 ###  Image Indexing
 - Automatically detects image uploads
 - Saves images to local storage (`data/images/`)
@@ -28,19 +39,14 @@ All core modules include unit tests:
 - Slash commands
 - Message event logic
 
+```bash
+pytest -q
+PYTHONPATH=. pytest -q # mac                                                                                                                                                                                                       ✔  final_project Py  18:00:22 
+```
+
 ###  Persistent Storage
 Uses SQLite in WAL mode for safe concurrent writes.
 
-
-### Setting
-```bash
-python3 -m venv venv
-source venv/bin/activate   
-pip install -r requirements.txt
-cp .env.example .env # fix the corresponding content
-# run the server
-python ./main_bot.py
-```
 
 ### Note
 How to get server ID (guild ID)

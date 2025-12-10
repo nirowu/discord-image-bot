@@ -1,8 +1,9 @@
 pytest
+pytest-asyncio
 rapidfuzz
 pytesseract
-discord.py
 Pillow
-pytest-asyncio
+discord.py
 python-dotenv
-
+paddleocr
+paddlepaddle
