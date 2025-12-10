@@ -9,7 +9,7 @@ Search works through normal text messages or through a slash command with autoco
 
 ### Setting
 ```bash
-python3.10 -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
@@ -41,7 +41,7 @@ All core modules include unit tests:
 
 ```bash
 pytest -q
-PYTHONPATH=. pytest -q # mac                                                                                                                                                                                                       ✔  final_project Py  18:00:22 
+PYTHONPATH=. pytest -q # mac
 ```
 
 ###  Persistent Storage
