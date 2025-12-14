@@ -13,6 +13,7 @@ from bot import (
     run_img_autocomplete,
 )
 from storage import init_db
+from features.scheduling import setup_scheduling
 
 
 # ----------------------
@@ -48,6 +49,9 @@ class MyBot(discord.Client):
         init_db(self.conn)
 
     async def setup_hook(self):
+        # Register feature commands BEFORE syncing, otherwise Discord won't see them.
+        setup_scheduling(self)
+
         if GUILD_ID:
             guild = discord.Object(id=int(GUILD_ID))
             self.tree.copy_global_to(guild=guild)
@@ -74,7 +78,6 @@ async def img_cmd(interaction: discord.Interaction, query: str):
 @img_cmd.autocomplete("query")
 async def img_autocomplete(interaction: discord.Interaction, current: str):
     return await run_img_autocomplete(interaction, bot.conn, current)
-
 
 # ----------------------
 # Message handler

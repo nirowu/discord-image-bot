@@ -31,6 +31,14 @@ python ./main_bot.py
 - Supports Chinese and English fuzzy matching (RapidFuzz)
 - OCR text also becomes searchable
 
+### Scheduled Messages
+Schedule a message to be sent later (independent from image indexing/search):
+- `/schedule minutes:<1-10080> content:<text> [mode:Text|Image] [channel:<#channel>]`
+- `/schedule_at month:<1-12> day:<1-31> hour:<0-23> minute:<0-59> content:<text> [mode:Text|Image] [channel:<#channel>]` (uses the bot host's local timezone)
+- `/schedule_repeat hour:<0-23> minute:<0-59> interval:<Every minute|Every hour|Every day> content:<text> [mode:Text|Image] [channel:<#channel>]`
+- `/schedule_list [limit:<1-20>]` (lists pending schedules in the current channel)
+- `/schedule_cancel schedule_id:<id>` (only cancels schedules created by you)
+
 ###  Fully TDD-Based
 All core modules include unit tests:
 - Indexing
