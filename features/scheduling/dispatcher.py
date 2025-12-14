@@ -4,7 +4,7 @@ from typing import Awaitable, Callable, Dict, Optional
 
 import discord
 
-from scheduler_storage import claim_due_messages, mark_failed, mark_sent, reschedule_repeat
+from .storage import claim_due_messages, mark_failed, mark_sent, reschedule_repeat
 
 
 ScheduledHandler = Callable[[discord.abc.Messageable, object, str], Awaitable[None]]
