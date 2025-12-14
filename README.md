@@ -25,11 +25,12 @@ python ./main_bot.py
 - Stores metadata in SQLite (`data/images.db`)
 - Persists across bot restarts
 
-###  Fuzzy Search
-- Search for images using regular text messages
-- `/img` slash command with autocomplete
-- Supports Chinese and English fuzzy matching (RapidFuzz)
-- OCR text also becomes searchable
+ ### Fuzzy Search
+- Search indexed images using regular text messages
+- `/img` slash command with autocomplete support
+- Supports Chinese and English text recognition via OCR (EasyOCR)
+- Images are searchable using both user-provided messages and OCR-extracted text
+
 
 ### Scheduled Messages
 Schedule a message to be sent later (independent from image indexing/search):
