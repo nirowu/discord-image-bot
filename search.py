@@ -6,6 +6,10 @@ from storage import fetch_all_images
 MIN_SCORE = 50  # Minimum score to consider a match
 
 def search_best_match(conn, query: str, limit: int = 1) -> List[Dict[str, Any]]:
+    """
+    Return up to `limit` best-matching image records based on fuzzy text matching.
+    Only results with score >= MIN_SCORE are considered valid matches.
+    """
     rows = list(fetch_all_images(conn))
     if not rows:
         return []

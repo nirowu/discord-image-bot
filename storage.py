@@ -1,9 +1,8 @@
 # storage.py
-
 import sqlite3
 from typing import Optional, Iterable, Dict, Any
 
-# Database schema
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS images (
     id                INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,7 +19,7 @@ CREATE TABLE IF NOT EXISTS images (
 
 
 def init_db(conn: sqlite3.Connection) -> None:
-    """Create DB tables if missing."""
+    """Create tables if they don't exist."""
     conn.execute(SCHEMA)
     conn.commit()
 
@@ -116,6 +115,8 @@ def insert_image_for_test(
     )
     conn.commit()
     return cur.lastrowid
+
+
 
 
 # ------------------------------------------------------------------

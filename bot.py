@@ -5,6 +5,7 @@ from search import search_best_match
 from storage import save_image_record
 from ocr import extract_text
 
+
 # ----------------------------
 # SimpleMessage (for tests)
 # ----------------------------
@@ -23,13 +24,6 @@ class SimpleMessage:
 # Image indexing pipeline
 # ----------------------------
 def index_image_from_message(conn, message, image_path: str) -> int:
-    """
-    Combine:
-    - user text
-    - OCR text
-    Save into database
-    Also save OCR text to sidecar .txt file.
-    """
 
     user_text = message.content.strip() or None
     ocr_text = extract_text(image_path) or None
@@ -43,7 +37,7 @@ def index_image_from_message(conn, message, image_path: str) -> int:
         print(f"[WARN] Could not write OCR file {txt_path}: {e}")
 
     # Store DB record
-    img_id = save_image_record(
+    return save_image_record(
         conn,
         uploader_id=str(message.author.id),
         channel_id=str(message.channel.id),
@@ -53,7 +47,6 @@ def index_image_from_message(conn, message, image_path: str) -> int:
         ocr_text=ocr_text,
     )
 
-    return img_id
 
 # ----------------------------
 # Text-based search handler
@@ -71,11 +64,11 @@ async def handle_text_query(conn, message):
 
 
 # ----------------------------
-# Slash command: /img
+# Slash command logic
 # ----------------------------
-async def run_img_command(interaction, conn, query: str):
-    """Handler for slash command /img"""
 
+async def run_img_command(interaction, conn, query: str):
+    """Slash command handler."""
     matches = search_best_match(conn, query, limit=1)
 
     if not matches:
@@ -83,7 +76,6 @@ async def run_img_command(interaction, conn, query: str):
         return
 
     row = matches[0]
-
     await interaction.response.send_message(
         file=discord.File(row["file_path"]),
         ephemeral=False
@@ -94,16 +86,14 @@ async def run_img_command(interaction, conn, query: str):
 # Autocomplete handler
 # ----------------------------
 async def run_img_autocomplete(interaction, conn, current: str):
-    """
-    Autocomplete handler for /img query.
-    Must return a list of Choice objects.
-    """
+    """Autocomplete handler for /img."""
     matches = search_best_match(conn, current, limit=5)
 
+    # Discord requires list of Choice objects
     choices = [
         discord.app_commands.Choice(
-            name=row["index_text"][:100] if row["index_text"] else "(no text)",
-            value=row["index_text"][:100] if row["index_text"] else ""
+            name=(row["index_text"][:100] if row["index_text"] else "No text"),
+            value=row["index_text"][:100]
         )
         for row in matches
     ]

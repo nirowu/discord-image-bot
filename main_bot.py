@@ -10,9 +10,9 @@ from storage import init_db, get_image_by_id
 from search import search_best_match
 from features.scheduling import setup_scheduling
 
-# =========================
+# ----------------------
 # Load environment
-# =========================
+# ----------------------
 load_dotenv()
 
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -31,9 +31,9 @@ if not IMAGE_FOLDER:
 
 os.makedirs(IMAGE_FOLDER, exist_ok=True)
 
-# =========================
+# ----------------------
 # Dropdown UI
-# =========================
+# ----------------------
 class ImageSelect(discord.ui.Select):
     def __init__(self, matches):
         self.matches = matches
@@ -80,10 +80,9 @@ class ImageSelectView(discord.ui.View):
         super().__init__(timeout=30)
         self.add_item(ImageSelect(matches))
 
-
-# =========================
+# ----------------------
 # Discord bot class
-# =========================
+# ----------------------
 class MyBot(discord.Client):
     def __init__(self):
         intents = discord.Intents.default()
@@ -113,9 +112,9 @@ class MyBot(discord.Client):
 bot = MyBot()
 tree = bot.tree
 
-# =========================
-# Slash command /img
-# =========================
+# ----------------------
+# /img slash command
+# ----------------------
 @tree.command(name="img", description="Search for an indexed image")
 @app_commands.describe(query="Keyword to search image")
 async def img_cmd(interaction: discord.Interaction, query: str):
@@ -140,16 +139,15 @@ async def img_cmd(interaction: discord.Interaction, query: str):
         ephemeral=True,
     )
 
-
-# =========================
+# ----------------------
 # Message handler
-# =========================
+# ----------------------
 @bot.event
 async def on_message(message: discord.Message):
     if message.author.bot:
         return
 
-    # 1️⃣ Image indexing
+    # 1. Image upload → index it
     if message.attachments:
         for attachment in message.attachments:
             if attachment.content_type and "image" in attachment.content_type:
@@ -165,7 +163,7 @@ async def on_message(message: discord.Message):
                 ocr_text = (row.get("ocr_text") if row else None) or "(none)"
                 await message.channel.send(f"Image indexed!\nOCR: {ocr_text}")
                 return
-
+    # 2. Text message → keyword search
     text = message.content.strip()
     if text:
         matches = search_best_match(bot.conn, text, limit=10)
@@ -187,9 +185,9 @@ async def on_message(message: discord.Message):
         )
 
 
-# =========================
+# ----------------------
 # Start bot
-# =========================
+# ----------------------
 if __name__ == "__main__":
     print("Starting Discord bot…")
     bot.run(TOKEN)
