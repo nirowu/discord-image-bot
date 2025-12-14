@@ -1,8 +1,11 @@
 import pytest
 from datetime import datetime, timezone
 
-from scheduler_time import compute_run_at_from_components, ScheduleTimeError
-from scheduler_time import compute_next_occurrence_from_hour_minute
+from features.scheduling.time_utils import (
+    ScheduleTimeError,
+    compute_next_occurrence_from_hour_minute,
+    compute_run_at_from_components,
+)
 
 
 def test_compute_run_at_rejects_invalid_date():

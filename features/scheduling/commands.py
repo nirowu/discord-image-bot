@@ -5,14 +5,14 @@ from typing import Optional
 import discord
 from discord import app_commands
 
-from scheduler_feature import start_scheduler_loop
-from scheduler_storage import (
+from .dispatcher import start_scheduler_loop
+from .storage import (
     cancel_scheduled_message,
     create_scheduled_message,
     init_scheduler_db,
     list_scheduled_messages,
 )
-from scheduler_time import (
+from .time_utils import (
     ScheduleTimeError,
     compute_next_occurrence_from_hour_minute,
     compute_run_at_from_components,

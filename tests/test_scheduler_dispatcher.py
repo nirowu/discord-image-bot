@@ -2,8 +2,8 @@ import time
 
 import pytest
 
-from scheduler_feature import dispatch_due_messages
-from scheduler_storage import (
+from features.scheduling.dispatcher import dispatch_due_messages
+from features.scheduling.storage import (
     init_scheduler_db,
     create_scheduled_message,
     list_scheduled_messages,

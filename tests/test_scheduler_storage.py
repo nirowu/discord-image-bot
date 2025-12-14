@@ -1,6 +1,6 @@
 import time
 
-from scheduler_storage import (
+from features.scheduling.storage import (
     init_scheduler_db,
     create_scheduled_message,
     list_scheduled_messages,
