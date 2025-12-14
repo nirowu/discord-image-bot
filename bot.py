@@ -5,6 +5,16 @@ from search import search_best_match
 from storage import save_image_record
 from ocr import extract_text
 
+class SimpleMessage:
+    """
+    Minimal test-friendly message structure.
+    Used ONLY for unit tests.
+    """
+    def __init__(self, content, author_id, channel_id, message_id):
+        self.content = content
+        self.author = type("Author", (), {"id": author_id})()
+        self.channel = type("Channel", (), {"id": channel_id, "send": None})()
+        self.id = message_id
 
 def index_image_from_message(conn, message, image_path: str) -> int:
     user_text = message.content.strip() or None
@@ -42,7 +52,7 @@ async def run_img_command(interaction, conn, query: str):
     matches = search_best_match(conn, query, limit=1)
 
     if not matches:
-        await interaction.response.send_message("No image found.", ephemeral=True)
+        await interaction.response.send_message("No image found", ephemeral=True)
         return
 
     row = matches[0]
