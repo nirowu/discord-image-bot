@@ -1,7 +1,7 @@
 pytest
 pytest-asyncio
 rapidfuzz
-easyocr
+paddleocr
 opencv-python
 Pillow
 discord.py
