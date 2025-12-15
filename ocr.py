@@ -34,6 +34,11 @@ def preprocess_image(path: str):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     return gray
 
+def extract_lines(img: cv2.typing.MatLike) -> list[str]:
+    reader = get_reader()
+    # EasyOCR returns a list of text strings (detail=0)
+    results = reader.readtext(img, detail=0)
+    return results
 
 def extract_text(path: str) -> str:
     """
@@ -46,9 +51,7 @@ def extract_text(path: str) -> str:
         if processed is None:
             return ""
 
-        reader = get_reader()
-        # EasyOCR returns a list of text strings (detail=0)
-        results = reader.readtext(processed, detail=0)
+        results = extract_lines(processed)
 
         if not results:
             return ""
