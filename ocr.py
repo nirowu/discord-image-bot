@@ -1,6 +1,6 @@
-# ocr.py - EasyOCR version (macOS & Python 3.10 friendly)
+# ocr.py - PaddleOCR version (TDD-compatible + OpenCV-safe)
 
-import easyocr
+from paddleocr import PaddleOCR
 import cv2
 
 _reader = None  # lazy-loaded OCR reader
@@ -8,13 +8,17 @@ _reader = None  # lazy-loaded OCR reader
 
 def get_reader():
     """
-    Lazy load EasyOCR reader. 
-    This prevents slow import time and makes pytest run fast.
+    Lazy load PaddleOCR reader.
+    Kept mockable for pytest.
     """
     global _reader
     if _reader is None:
-        # Chinese + English support
-        _reader = easyocr.Reader(["ch_tra", "en"])
+        _reader = PaddleOCR(
+            use_doc_orientation_classify=False,
+            use_doc_unwarping=False,
+            use_textline_orientation=False,
+            lang="ch",  # Traditional Chinese
+        )
     return _reader
 
 
@@ -23,7 +27,10 @@ def preprocess_image(path: str):
     Load and prep image.
     This is mockable in tests.
     """
-    img = cv2.imread(path)
+    if not path:
+        return None
+
+    img = cv2.imread(path, cv2.IMREAD_COLOR)
     if img is None:
         print("[OCR Error] Cannot open:", path)
         return None
@@ -31,14 +38,15 @@ def preprocess_image(path: str):
     # Upscale helps OCR accuracy
     img = cv2.resize(img, None, fx=2, fy=2)
 
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    return gray
+    return img
 
 def extract_lines(img: cv2.typing.MatLike) -> list[str]:
     reader = get_reader()
-    # EasyOCR returns a list of text strings (detail=0)
-    results = reader.readtext(img, detail=0)
-    return results
+    results = reader.predict(img)
+    texts = []
+    for res in results:
+        texts.extend(res.get("rec_texts", []))
+    return texts
 
 def extract_text(path: str) -> str:
     """
