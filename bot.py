@@ -2,7 +2,7 @@
 
 import discord
 from search import search_best_match
-from storage import save_image_record
+from storage import save_image_record, get_random_image
 from ocr import extract_text
 
 
@@ -99,3 +99,17 @@ async def run_img_autocomplete(interaction, conn, current: str):
     ]
 
     await interaction.response.send_autocomplete(choices)
+
+
+async def run_random_command(interaction, conn):
+    """Slash command handler for /random."""
+    row = get_random_image(conn)
+
+    if not row:
+        await interaction.response.send_message("No image found", ephemeral=True)
+        return
+
+    await interaction.response.send_message(
+        file=discord.File(row["file_path"]),
+        ephemeral=False,
+    )

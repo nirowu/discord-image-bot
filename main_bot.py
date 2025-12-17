@@ -6,7 +6,7 @@ from discord import app_commands
 from dotenv import load_dotenv
 
 from bot import index_image_from_message
-from storage import init_db, get_image_by_id
+from storage import init_db, get_image_by_id, get_random_image
 from search import search_best_match
 from features.scheduling import setup_scheduling
 
@@ -184,6 +184,19 @@ async def on_message(message: discord.Message):
             view=view,
         )
 
+
+@tree.command(name="random", description="Send a random indexed image")
+async def random_cmd(interaction: discord.Interaction):
+    row = get_random_image(bot.conn)
+
+    if not row:
+        await interaction.response.send_message("No image found.", ephemeral=True)
+        return
+
+    await interaction.response.send_message(
+        file=discord.File(row["file_path"]),
+        ephemeral=False,
+    )
 
 # ----------------------
 # Start bot
