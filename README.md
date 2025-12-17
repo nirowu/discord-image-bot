@@ -31,6 +31,8 @@ python ./main_bot.py
 - Supports Chinese and English text recognition via OCR (EasyOCR)
 - Images are searchable using both user-provided messages and OCR-extracted text
 
+### Random Selection
+- `/random` slash command to get a random image uploaded previously
 
 ### Scheduled Messages
 Schedule a message to be sent later (independent from image indexing/search):
