@@ -42,6 +42,7 @@ The bot will connect to Discord, initialize the database, and start listening fo
 
 ---
 
+
 ### Fuzzy Search
 
 * Search indexed images using normal text messages
@@ -49,6 +50,11 @@ The bot will connect to Discord, initialize the database, and start listening fo
 * Supports multi-language text recognition via OCR
 * Images are searchable using both user-provided messages and OCR-extracted text
 * When multiple images match, a dropdown menu allows selecting the desired image
+
+---
+
+### Random Selection
+* `/random` slash command to get a random image uploaded previously
 
 ---
 

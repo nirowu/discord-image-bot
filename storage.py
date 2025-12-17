@@ -126,3 +126,17 @@ def insert_image_for_test(
 def _row_to_dict(cur: sqlite3.Cursor, row: sqlite3.Row) -> Dict[str, Any]:
     col_names = [desc[0] for desc in cur.description]
     return {col: row[idx] for idx, col in enumerate(col_names)}
+
+
+# ------------------------------------------------------------------
+# Random selection
+# ------------------------------------------------------------------
+
+def get_random_image(conn: sqlite3.Connection) -> Optional[Dict[str, Any]]:
+    """Return a random image record, or None if no images are stored."""
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM images ORDER BY RANDOM() LIMIT 1")
+    row = cur.fetchone()
+    if not row:
+        return None
+    return _row_to_dict(cur, row)
