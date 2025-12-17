@@ -10,6 +10,10 @@ Images can be searched via regular text messages or through a slash command with
 
 ### Setup and Run
 
+> [!WARNING]
+> If you would like to use CUDA for OCR, before running `pip install -r requirements.txt`, remove the `paddlepaddle` line, and see [PaddlePaddle installation docs] (https://www.paddleocr.ai/latest/en/version3.x/installation.html#12-installing-paddlepaddle-via-pip) to install `paddlepaddle-gpu` on your environment.
+> We have tested it on RTX 3090 with driver version: 551.76 and CUDA version: 12.4.
+
 ```bash
 git clone <repo-url>
 cd discord-image-bot
