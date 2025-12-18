@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS images (
     channel_id        TEXT NOT NULL,
     message_id        TEXT NOT NULL,
     file_path         TEXT NOT NULL,
+    image_hash        TEXT UNIQUE,
     user_text         TEXT,
     ocr_text          TEXT,
     index_text        TEXT NOT NULL,
@@ -36,6 +37,7 @@ def save_image_record(
     file_path: str,
     user_text: Optional[str],
     ocr_text: Optional[str],
+    image_hash: str | None = None,
 ) -> int:
     """
     Save one image row.
@@ -49,15 +51,16 @@ def save_image_record(
         """
         INSERT INTO images (
             uploader_id, channel_id, message_id,
-            file_path, user_text, ocr_text, index_text
+            file_path, image_hash, user_text, ocr_text, index_text
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             uploader_id,
             channel_id,
             message_id,
             file_path,
+            image_hash,
             user_text,
             ocr_text,
             index_text,
@@ -70,6 +73,17 @@ def save_image_record(
 # ------------------------------------------------------------------
 # Fetch helpers
 # ------------------------------------------------------------------
+
+def get_image_by_hash(conn: sqlite3.Connection, image_hash: str):
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT * FROM images WHERE image_hash = ?",
+        (image_hash,),
+    )
+    row = cur.fetchone()
+    if not row:
+        return None
+    return _row_to_dict(cur, row)
 
 def get_image_by_id(conn: sqlite3.Connection, img_id: int) -> Optional[Dict[str, Any]]:
     cur = conn.cursor()

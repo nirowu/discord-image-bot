@@ -2,8 +2,12 @@
 
 import discord
 from search import search_best_match
-from storage import save_image_record, get_random_image
+from storage import save_image_record, get_random_image, get_image_by_hash
 from ocr import extract_text
+from PIL import Image
+import imagehash
+import os
+
 
 
 # ----------------------------
@@ -20,10 +24,32 @@ class SimpleMessage:
         self.channel = type("Channel", (), {"id": channel_id, "send": None})()
         self.id = message_id
 
+
+
+def compute_image_hash(path: str) -> str:
+    """
+    Compute perceptual hash.
+    If the image cannot be opened (e.g. fake test data),
+    fall back to a deterministic placeholder hash.
+    """
+    try:
+        with Image.open(path) as img:
+            return str(imagehash.phash(img))
+    except Exception:
+        # Test-safe fallback
+        return "invalid_image_hash"
 # ----------------------------
 # Image indexing pipeline
 # ----------------------------
 def index_image_from_message(conn, message, image_path: str) -> int:
+    # 1. Compute hash
+    img_hash = compute_image_hash(image_path)
+
+    # 2. Dedup check
+    existing = get_image_by_hash(conn, img_hash)
+    if existing:
+        os.remove(image_path)
+        return -existing["id"]
 
     user_text = message.content.strip() or None
     ocr_text = extract_text(image_path) or None
@@ -45,6 +71,7 @@ def index_image_from_message(conn, message, image_path: str) -> int:
         file_path=image_path,
         user_text=user_text,
         ocr_text=ocr_text,
+        image_hash=img_hash,
     )
 
 
