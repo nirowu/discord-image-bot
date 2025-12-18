@@ -158,6 +158,12 @@ async def on_message(message: discord.Message):
                 await attachment.save(file_path)
 
                 img_id = index_image_from_message(bot.conn, message, file_path)
+
+                if img_id < 0:
+                    existing_id = -img_id
+                    await message.channel.send("⚠️ This image has already been indexed. Duplicate ignored.")
+                    return
+
                 row = get_image_by_id(bot.conn, img_id)
 
                 ocr_text = (row.get("ocr_text") if row else None) or "(none)"
